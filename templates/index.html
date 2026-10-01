@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GVPW Smart Assistant</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; }
+
+        body {
+            background: #f8faff; min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            padding: 12px; overflow: hidden; transition: background 0.3s ease;
+        }
+
+        /* LANDING */
+        .landing {
+            max-width: 780px; width: 100%; background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px); border-radius: 32px; padding: 28px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.6); max-height: 96vh; overflow: hidden;
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        .brand-header { margin-bottom: 14px; text-align: center; }
+        .brand-header h1 {
+            font-size: 32px; font-weight: 700; color: #4A3FBF;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .brand-header .sub { font-size: 16px; color: #4a4a6a; margin-top: 2px; }
+        .welcome-card {
+            background: linear-gradient(145deg, #f6f4ff, #ffffff);
+            padding: 18px 24px; border-radius: 24px; border: 1px solid #eeedf5;
+            margin-bottom: 14px; text-align: center;
+        }
+        .welcome-card p { font-size: 15px; line-height: 1.6; color: #1e1e32; }
+        .welcome-card p strong { color: #4A3FBF; }
+        .welcome-card .highlight-bubble {
+            display: inline-block; background: #6C63FF; color: white;
+            padding: 1px 14px; border-radius: 40px; font-weight: 600; font-size: 15px;
+        }
+        .welcome-card .secondary-text { color: #555577; font-size: 14px; margin-top: 4px; }
+
+        /* TOGGLE */
+        .chat-toggle {
+            position: fixed; bottom: 28px; right: 28px; width: 60px; height: 60px;
+            background: linear-gradient(135deg, #6C63FF, #4A3FBF); color: white;
+            border: none; border-radius: 50%; font-size: 28px; cursor: pointer;
+            box-shadow: 0 8px 28px rgba(108, 99, 255, 0.4);
+            transition: all 0.3s ease; z-index: 1000;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .chat-toggle:hover { transform: scale(1.06); }
+
+        /* WIDGET */
+        .chat-widget {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px);
+            display: none; flex-direction: column; overflow: hidden; z-index: 1001;
+            animation: fadeIn 0.25s ease;
+        }
+        .chat-widget.active { display: flex; }
+        .chat-widget.minimized {
+            top: auto; left: auto; bottom: 100px; right: 28px;
+            width: 400px; height: 720px;
+            max-width: calc(100vw - 40px); max-height: calc(100vh - 140px);
+            border-radius: 32px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(255,255,255,0.4);
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* HEADER */
+        .widget-header {
+            background: linear-gradient(135deg, #6C63FF, #4A3FBF); padding: 16px 24px;
+            color: white; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+        }
+        .widget-header h3 { font-weight: 600; font-size: 17px; display: flex; align-items: center; gap: 10px; }
+        .header-actions { display: flex; gap: 6px; align-items: center; }
+        .header-actions button {
+            background: rgba(255, 255, 255, 0.15); border: none; color: white;
+            width: 26px; height: 26px; border-radius: 50%; font-size: 12px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: 0.2s;
+        }
+        .header-actions button:hover { background: rgba(255, 255, 255, 0.3); }
+
+        /* MESSAGES */
+        .widget-messages {
+            flex: 1 1 auto; min-height: 0; overflow-y: auto;
+            padding: 20px 24px 12px 24px; display: flex; flex-direction: column; gap: 10px;
+            background: rgba(250, 251, 255, 0.4); position: relative; z-index: 1;
+            width: 100%; max-width: 900px; margin: 0 auto;
+        }
+        .widget-messages::-webkit-scrollbar { width: 6px; }
+        .widget-messages::-webkit-scrollbar-thumb { background: #c5bce6; border-radius: 20px; }
+
+        .msg {
+            max-width: 85%; padding: 12px 18px; border-radius: 18px;
+            font-size: 14px; font-weight: 450; line-height: 1.6;
+            animation: fadeSlide 0.25s ease; word-wrap: break-word;
+        }
+        .msg.user {
+            background: #6C63FF; color: white; align-self: flex-end;
+            border-bottom-right-radius: 4px; font-weight: 500;
+        }
+        .msg.bot {
+            background: white; color: #1a1a2e; align-self: flex-start;
+            border-bottom-left-radius: 4px; border: 1px solid #efedf7;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+        .msg.bot.error { background: #fff0f0; border-color: #ff6b6b; color: #c0392b; }
+        .msg .tag { font-size: 10px; opacity: 0.5; margin-top: 6px; display: block; }
+        .msg.typing {
+            background: white !important; opacity: 0.7; font-style: italic;
+            border: 1px solid #e0ddf0;
+        }
+        .msg-feedback {
+            display: flex; gap: 6px; margin-top: 8px; font-size: 11px; flex-wrap: wrap;
+        }
+        .msg-feedback button {
+            background: transparent; border: 1px solid #e0ddf0;
+            border-radius: 14px; padding: 3px 10px; cursor: pointer;
+            font-size: 11px; transition: 0.2s;
+        }
+        .msg-feedback button:hover { background: #f0edff; }
+
+        /* QUICK REPLIES */
+        .quick-replies {
+            flex-shrink: 0; padding: 8px 16px; background: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
+            display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+            position: relative; z-index: 2; max-height: 80px; overflow-y: auto;
+            width: 100%; max-width: 900px; margin: 0 auto;
+        }
+        .quick-chip {
+            background: #f0edff; color: #4A3FBF; border: none; padding: 5px 14px;
+            border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer;
+            transition: all 0.2s ease; white-space: nowrap;
+        }
+        .quick-chip:hover { background: #6C63FF; color: white; transform: translateY(-1px); }
+
+        /* INPUT */
+        .widget-input {
+            flex-shrink: 0; padding: 8px 24px 14px 24px;
+            background: rgba(255, 255, 255, 0.95); display: flex; gap: 8px;
+            border-top: 1px solid rgba(0, 0, 0, 0.04); position: relative; z-index: 2;
+            width: 100%; max-width: 900px; margin: 0 auto;
+        }
+        .widget-input input {
+            flex: 1; padding: 8px 16px; border: 1.5px solid #e6e4f0;
+            border-radius: 30px; font-size: 12px; outline: none;
+            background: #fafaff; height: 36px;
+        }
+        .widget-input input:focus {
+            border-color: #6C63FF;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.08);
+        }
+        .widget-input > button {
+            background: #6C63FF; color: white; border: none; padding: 0 20px;
+            height: 36px; border-radius: 30px; font-weight: 600;
+            font-size: 12px; cursor: pointer; transition: 0.2s;
+        }
+        .widget-input > button:hover { background: #4A3FBF; }
+
+        /* SUGGESTIONS DROPDOWN */
+        .suggestions-dropdown {
+            position: absolute; bottom: 100%; left: 24px; right: 24px;
+            background: white; border-radius: 14px 14px 0 0;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+            max-height: 200px; overflow-y: auto; display: none;
+            z-index: 10; border: 1px solid #eeedf5; border-bottom: none;
+        }
+        .suggestions-dropdown.show { display: block; }
+        .suggestion-item {
+            padding: 10px 16px; cursor: pointer; font-size: 13px;
+            color: #4A3FBF; border-bottom: 1px solid #f5f3ff; transition: 0.15s;
+        }
+        .suggestion-item:hover { background: #f0edff; }
+        .suggestion-item:last-child { border-bottom: none; }
+
+        /* ---------- ANALYTICS PANEL ---------- */
+        .analytics-panel {
+            display: none;
+            background: rgba(255, 255, 255, 0.98);
+            border-bottom: 2px solid #e6e4f0;
+            padding: 16px 24px;
+            flex-shrink: 0;
+            animation: slideDown 0.3s ease;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .analytics-panel.show { display: block; }
+
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            color: #4A3FBF;
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+
+        .analytics-body {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .analytics-card {
+            background: linear-gradient(135deg, #f6f4ff, #ffffff);
+            padding: 12px 14px;
+            border-radius: 12px;
+            border-left: 4px solid #6C63FF;
+            text-align: center;
+        }
+        .analytics-card .label {
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        .analytics-card .value {
+            font-size: 22px;
+            font-weight: 700;
+            color: #4A3FBF;
+        }
+        .analytics-card.green { border-left-color: #27ae60; }
+        .analytics-card.green .value { color: #1e8449; }
+        .analytics-card.orange { border-left-color: #f39c12; }
+        .analytics-card.orange .value { color: #b9770e; }
+        .analytics-card.pink { border-left-color: #e83a6b; }
+        .analytics-card.pink .value { color: #b3194f; }
+        .analytics-card.red { border-left-color: #c0392b; }
+        .analytics-card.red .value { color: #922b21; }
+
+        .analytics-top {
+            grid-column: 1 / -1;
+            background: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid #f0edff;
+            margin-top: 6px;
+        }
+        .analytics-top h4 {
+            font-size: 13px;
+            color: #4A3FBF;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .analytics-top .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px dashed #f0f0f5;
+            font-size: 12px;
+            color: #1a1a2e;
+        }
+        .analytics-top .row:last-child { border-bottom: none; }
+        .analytics-top .badge {
+            background: #f0edff;
+            color: #4A3FBF;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 11px;
+        }
+
+        .analytics-loading {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #999;
+            padding: 20px;
+            font-style: italic;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; max-height: 0; }
+            to { opacity: 1; max-height: 400px; }
+        }
+
+        /* DARK MODE */
+        body.dark-mode { background: #0f1220; }
+        body.dark-mode .landing { background: rgba(20, 22, 40, 0.85); border-color: rgba(255, 255, 255, 0.08); }
+        body.dark-mode .brand-header h1 { color: #b3a7ff; }
+        body.dark-mode .brand-header .sub { color: #9999b8; }
+        body.dark-mode .welcome-card {
+            background: linear-gradient(145deg, #1a1c2f, #252842);
+            border-color: #2a2d45;
+        }
+        body.dark-mode .welcome-card p { color: #e0e0f5; }
+        body.dark-mode .welcome-card p strong { color: #b3a7ff; }
+        body.dark-mode .welcome-card .secondary-text { color: #a0a0c0; }
+        body.dark-mode .chat-widget { background: #0f1220; }
+        body.dark-mode .chat-widget.minimized { background: #16182a; box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6); }
+        body.dark-mode .widget-messages { background: #0f1220; }
+        body.dark-mode .msg.bot { background: #1a1c2f; color: #e0e0f5; border-color: #2a2d45; }
+        body.dark-mode .msg.typing { background: #1a1c2f !important; color: #c0c0e0; border-color: #2a2d45; }
+        body.dark-mode .msg .tag { color: #8888a8; }
+        body.dark-mode .msg-feedback button { border-color: #2a2d45; color: #b3a7ff; }
+        body.dark-mode .msg-feedback button:hover { background: #2a2d45; }
+        body.dark-mode .quick-replies { background: #16182a; border-top-color: #2a2d45; }
+        body.dark-mode .quick-chip { background: #2a2d45; color: #b3a7ff; }
+        body.dark-mode .quick-chip:hover { background: #6C63FF; color: white; }
+        body.dark-mode .widget-input { background: #16182a; border-top-color: #2a2d45; }
+        body.dark-mode .widget-input input { background: #1a1c2f; color: #e0e0f5; border-color: #2a2d45; }
+        body.dark-mode .widget-input input::placeholder { color: #7777a0; }
+        body.dark-mode .widget-header { background: linear-gradient(135deg, #4A3FBF, #2d2660); }
+        body.dark-mode .suggestions-dropdown { background: #1a1c2f; border-color: #2a2d45; }
+        body.dark-mode .suggestion-item { color: #b3a7ff; border-bottom-color: #2a2d45; }
+        body.dark-mode .suggestion-item:hover { background: #2a2d45; }
+        body.dark-mode .analytics-panel { background: #16182a; border-bottom-color: #2a2d45; }
+        body.dark-mode .analytics-header { color: #b3a7ff; }
+        body.dark-mode .analytics-card {
+            background: linear-gradient(135deg, #1a1c2f, #252842);
+            border-color: #2a2d45;
+        }
+        body.dark-mode .analytics-card .label { color: #9999b8; }
+        body.dark-mode .analytics-card .value { color: #b3a7ff; }
+        body.dark-mode .analytics-top { background: #1a1c2f; border-color: #2a2d45; }
+        body.dark-mode .analytics-top h4 { color: #b3a7ff; }
+        body.dark-mode .analytics-top .row { color: #e0e0f5; border-bottom-color: #2a2d45; }
+        body.dark-mode .analytics-top .badge { background: #2a2d45; color: #b3a7ff; }
+
+        /* RESPONSIVE */
+        @media (max-width: 600px) {
+            .chat-widget.minimized {
+                bottom: 70px; right: 10px;
+                width: calc(100vw - 20px); height: calc(100vh - 120px);
+                border-radius: 28px;
+            }
+            .chat-toggle {
+                width: 54px; height: 54px; font-size: 24px;
+                bottom: 20px; right: 20px;
+            }
+            .msg { font-size: 13px; padding: 10px 14px; }
+            .quick-chip { font-size: 11px; padding: 4px 10px; }
+        }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="landing">
+        <div class="brand-header">
+            <h1><span>🎓</span> GVPW Smart Assistant</h1>
+            <div class="sub">Your 24/7 AI companion for campus life ✨</div>
+        </div>
+        <div class="welcome-card">
+            <p>👋 <strong>Hey there, GVPWian!</strong> Welcome to your new <strong>AI-powered campus companion</strong>.</p>
+            <p style="margin-top: 6px;">Click the floating <span class="highlight-bubble">💬</span> icon to start chatting.</p>
+            <p class="secondary-text">Ask me <strong>anything about GVPW</strong>!</p>
+        </div>
+    </div>
+
+    <button class="chat-toggle" id="toggleChat" aria-label="Open Chat">💬</button>
+
+    <div class="chat-widget" id="chatWidget">
+        <div class="widget-header">
+            <h3>📱 GVPW Assistant</h3>
+            <div class="header-actions">
+                <button id="analyticsBtn" title="View Analytics">📊</button>
+                <button id="exportChatBtn" title="Export Chat">📥</button>
+                <button id="clearHistoryBtn" title="Clear Chat">🗑️</button>
+                <button id="themeToggle" title="Toggle Dark Mode">🌙</button>
+                <button id="minimizeBtn" title="Minimize / Expand">—</button>
+                <button id="closeChat" title="Close">✕</button>
+            </div>
+        </div>
+
+        <!-- ANALYTICS PANEL -->
+        <div class="analytics-panel" id="analyticsPanel">
+            <div class="analytics-header">
+                <span>📊 Live Analytics</span>
+                <button onclick="closeAnalytics()" style="background:none;border:none;color:inherit;cursor:pointer;font-size:16px;">✕</button>
+            </div>
+            <div class="analytics-body" id="analyticsBody">
+                <div class="analytics-loading">Loading...</div>
+            </div>
+        </div>
+
+        <div class="widget-messages" id="chatBox">
+            <div class="msg bot">
+                🌱 Click a topic below or type your question!
+                <span class="tag">✨ Ready</span>
+            </div>
+        </div>
+
+        <div class="quick-replies">
+            <button class="quick-chip" onclick="sendQuickReply('college map')">🗺️ Map</button>
+            <button class="quick-chip" onclick="sendQuickReply('library timings')">📚 Library</button>
+            <button class="quick-chip" onclick="sendQuickReply('branches')">🏛️ Branches</button>
+            <button class="quick-chip" onclick="sendQuickReply('fee structure')">💰 Fees</button>
+            <button class="quick-chip" onclick="sendQuickReply('admission process')">🎓 Admissions</button>
+            <button class="quick-chip" onclick="sendQuickReply('exam schedule')">📅 Exams</button>
+            <button class="quick-chip" onclick="sendQuickReply('hostel')">🏠 Hostel</button>
+            <button class="quick-chip" onclick="sendQuickReply('clubs')">🎯 Clubs</button>
+            <button class="quick-chip" onclick="sendQuickReply('placements')">💼 Placements</button>
+            <button class="quick-chip" onclick="sendQuickReply('internships')">🎓 Internships</button>
+            <button class="quick-chip" onclick="sendQuickReply('canteen')">🍴 Canteen</button>
+            <button class="quick-chip" onclick="sendQuickReply('bus routes')">🚌 Bus Routes</button>
+            <button class="quick-chip" onclick="sendQuickReply('events')">📅 Events</button>
+            <button class="quick-chip" onclick="sendQuickReply('cse faculty')">👩‍🏫 CSE Faculty</button>
+            <button class="quick-chip" onclick="sendQuickReply('csm faculty')">🤖 CSM Faculty</button>
+            <button class="quick-chip" onclick="sendQuickReply('dress code')">👕 Dress Code</button>
+        </div>
+
+        <div class="widget-input" style="position: relative;">
+            <div id="suggestions" class="suggestions-dropdown"></div>
+            <input type="text" id="userInput" placeholder="Type your question..." autocomplete="off" />
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const toggleBtn = document.getElementById('toggleChat');
+        const closeBtn = document.getElementById('closeChat');
+        const minimizeBtn = document.getElementById('minimizeBtn');
+        const widget = document.getElementById('chatWidget');
+        const themeToggle = document.getElementById('themeToggle');
+        const userInputEl = document.getElementById('userInput');
+        const suggestionsEl = document.getElementById('suggestions');
+
+        // ---------- SESSION ID ----------
+        let sessionId = localStorage.getItem('gvpw-session');
+        if (!sessionId) {
+            sessionId = 'sess-' + Math.random().toString(36).substring(2, 12) + '-' + Date.now();
+            localStorage.setItem('gvpw-session', sessionId);
+        }
+
+        // ---------- DARK MODE ----------
+        const savedTheme = localStorage.getItem('gvpw-theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeToggle.innerText = '☀️';
+        }
+        themeToggle.addEventListener('click', function() {
+            const isDark = document.body.classList.toggle('dark-mode');
+            this.innerText = isDark ? '☀️' : '🌙';
+            localStorage.setItem('gvpw-theme', isDark ? 'dark' : 'light');
+        });
+
+        // ---------- OPEN / CLOSE / MINIMIZE ----------
+        function openChat() {
+            widget.classList.add('active');
+            widget.classList.remove('minimized');
+            toggleBtn.style.display = 'none';
+            minimizeBtn.innerText = '—';
+        }
+        function closeChat() {
+            widget.classList.remove('active');
+            widget.classList.remove('minimized');
+            toggleBtn.style.display = 'flex';
+        }
+        function toggleMinimize() {
+            const nowMin = widget.classList.toggle('minimized');
+            minimizeBtn.innerText = nowMin ? '⛶' : '—';
+        }
+        toggleBtn.addEventListener('click', openChat);
+        closeBtn.addEventListener('click', closeChat);
+        minimizeBtn.addEventListener('click', toggleMinimize);
+
+        // ---------- SEND MESSAGE ----------
+        async function sendMessage(message = null) {
+            let msg = message;
+            if (!msg) {
+                msg = userInputEl.value.trim();
+                if (!msg) return;
+                userInputEl.value = '';
+            }
+            suggestionsEl.classList.remove('show');
+
+            const chatBox = document.getElementById('chatBox');
+            chatBox.innerHTML += `<div class="msg user">${msg}</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'msg bot typing';
+            typingDiv.innerText = '🤍 Thinking...';
+            chatBox.appendChild(typingDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg, session_id: sessionId })
+                });
+                const data = await response.json();
+
+                if (typingDiv && typingDiv.parentNode) typingDiv.remove();
+
+                if (data && data.answer) {
+                    const msgId = 'm-' + Date.now();
+                    chatBox.innerHTML += `
+                        <div class="msg bot" id="${msgId}">
+                            <div class="msg-content-${msgId}">${data.answer}</div>
+                            <span class="tag">${data.icon || '💬'} ${data.source || 'Bot'}</span>
+                            <div class="msg-feedback">
+                                <button onclick="sendFeedback('${msgId}', 'good', '${msg.replace(/'/g, "\\'")}')">👍 Helpful</button>
+                                <button onclick="sendFeedback('${msgId}', 'bad', '${msg.replace(/'/g, "\\'")}')">👎 Not helpful</button>
+                                <button onclick="copyAnswer('${msgId}', this)">📋 Copy</button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    chatBox.innerHTML += `<div class="msg bot error">❌ Server returned no answer.</div>`;
+                }
+                chatBox.scrollTop = chatBox.scrollHeight;
+                saveChatHistory();
+            } catch (error) {
+                if (typingDiv && typingDiv.parentNode) typingDiv.remove();
+                chatBox.innerHTML += `
+                    <div class="msg bot error">
+                        ❌ Cannot connect to Flask!<br>
+                        <strong>Open terminal and run: python app.py</strong>
+                    </div>
+                `;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+
+        function sendQuickReply(topic) { sendMessage(topic); }
+
+        // ---------- COPY ANSWER ----------
+        function copyAnswer(msgId, btnElement) {
+            const content = document.querySelector(`.msg-content-${msgId}`);
+            if (!content) return;
+
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = content.innerHTML;
+            const plainText = (tempDiv.innerText || tempDiv.textContent || '').trim();
+
+            navigator.clipboard.writeText(plainText).then(() => {
+                const original = btnElement.innerText;
+                btnElement.innerText = '✅ Copied!';
+                btnElement.style.color = '#27ae60';
+                setTimeout(() => {
+                    btnElement.innerText = original;
+                    btnElement.style.color = '';
+                }, 1500);
+            }).catch(err => {
+                console.error('Copy failed:', err);
+                alert('Could not copy. Please try manually.');
+            });
+        }
+
+        // ---------- FEEDBACK ----------
+        async function sendFeedback(msgId, rating, message) {
+            try {
+                await fetch('/feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message, rating: rating })
+                });
+                const el = document.getElementById(msgId);
+                if (el) {
+                    const fbDiv = el.querySelector('.msg-feedback');
+                    if (fbDiv) {
+                        fbDiv.innerHTML = `<span style="font-size:11px; color:#6C63FF; font-weight:600;">✅ Thanks for your feedback!</span>`;
+                    }
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        // ---------- CHAT HISTORY ----------
+        function saveChatHistory() {
+            const chatBox = document.getElementById('chatBox');
+            const messages = [];
+            chatBox.querySelectorAll('.msg').forEach(msg => {
+                if (msg.classList.contains('typing')) return;
+                const isUser = msg.classList.contains('user');
+                let text = '';
+                if (isUser) {
+                    text = msg.innerText;
+                } else {
+                    const c = msg.querySelector('div[class^="msg-content-"]');
+                    text = c ? c.innerHTML : msg.innerHTML;
+                }
+                messages.push({ role: isUser ? 'user' : 'bot', content: text });
+            });
+            localStorage.setItem('gvpw-chat-history', JSON.stringify(messages.slice(-30)));
+        }
+
+        function loadChatHistory() {
+            const saved = localStorage.getItem('gvpw-chat-history');
+            if (!saved) return;
+            try {
+                const messages = JSON.parse(saved);
+                if (messages.length <= 1) return;
+                const chatBox = document.getElementById('chatBox');
+                chatBox.innerHTML = '';
+                messages.forEach(msg => {
+                    if (msg.role === 'user') {
+                        chatBox.innerHTML += `<div class="msg user">${msg.content}</div>`;
+                    } else {
+                        chatBox.innerHTML += `
+                            <div class="msg bot">
+                                ${msg.content}
+                                <span class="tag">💬 Restored</span>
+                            </div>
+                        `;
+                    }
+                });
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } catch (e) {
+                console.error('Failed to load history:', e);
+            }
+        }
+
+        function clearChatHistory() {
+            if (confirm('Clear chat history?')) {
+                localStorage.removeItem('gvpw-chat-history');
+                location.reload();
+            }
+        }
+
+        // ---------- EXPORT CHAT ----------
+        function exportChat() {
+            const chatBox = document.getElementById('chatBox');
+            let text = `GVPW Smart Assistant - Chat Export\n`;
+            text += `Date: ${new Date().toLocaleString()}\n`;
+            text += `==========================================\n\n`;
+
+            chatBox.querySelectorAll('.msg').forEach(msg => {
+                if (msg.classList.contains('typing')) return;
+                const isUser = msg.classList.contains('user');
+                let content = '';
+                if (isUser) {
+                    content = msg.innerText;
+                } else {
+                    const c = msg.querySelector('div[class^="msg-content-"]');
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = c ? c.innerHTML : msg.innerHTML;
+                    content = tempDiv.innerText;
+                }
+                text += `${isUser ? '👤 You' : '🤖 Bot'}: ${content.trim()}\n\n`;
+            });
+
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `GVPW-Chat-${new Date().toISOString().slice(0,10)}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        document.getElementById('exportChatBtn').addEventListener('click', exportChat);
+        document.getElementById('clearHistoryBtn').addEventListener('click', clearChatHistory);
+
+        // ---------- SEARCH SUGGESTIONS ----------
+        const suggestionTopics = [
+            'College Map', 'Library Timings', 'Branches', 'Fees Structure',
+            'Admission Process', 'Exam Schedule', 'Hostel', 'Clubs', 'Placements',
+            'Internships', 'Canteen Menu', 'Bus Routes', 'Events Calendar',
+            'CSE Faculty', 'CSM Faculty', 'EEE Faculty', 'IT Faculty',
+            'Dress Code', 'Sports', 'Contact Info', 'Principal', 'College Timings'
+        ];
+
+        userInputEl.addEventListener('input', function() {
+            const query = this.value.toLowerCase().trim();
+            if (query.length < 2) {
+                suggestionsEl.classList.remove('show');
+                return;
+            }
+            const matches = suggestionTopics.filter(t => t.toLowerCase().includes(query)).slice(0, 5);
+            if (matches.length === 0) {
+                suggestionsEl.classList.remove('show');
+                return;
+            }
+            suggestionsEl.innerHTML = matches.map(m =>
+                `<div class="suggestion-item" onclick="pickSuggestion('${m}')">💡 ${m}</div>`
+            ).join('');
+            suggestionsEl.classList.add('show');
+        });
+
+        function pickSuggestion(topic) {
+            userInputEl.value = topic;
+            suggestionsEl.classList.remove('show');
+            sendMessage();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (!userInputEl.contains(e.target) && !suggestionsEl.contains(e.target)) {
+                suggestionsEl.classList.remove('show');
+            }
+        });
+
+        // ---------- ENTER KEY ----------
+        userInputEl.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // Load history on page open
+        loadChatHistory();
+
+        // ---------- ANALYTICS PANEL ----------
+        const analyticsBtn = document.getElementById('analyticsBtn');
+        const analyticsPanel = document.getElementById('analyticsPanel');
+        const analyticsBody = document.getElementById('analyticsBody');
+
+        analyticsBtn.addEventListener('click', function() {
+            const isOpen = analyticsPanel.classList.toggle('show');
+            if (isOpen) {
+                loadAnalytics();
+            }
+        });
+
+        function closeAnalytics() {
+            analyticsPanel.classList.remove('show');
+        }
+
+        async function loadAnalytics() {
+            analyticsBody.innerHTML = '<div class="analytics-loading">⏳ Loading analytics...</div>';
+            try {
+                const res = await fetch('/analytics-data');
+                const data = await res.json();
+
+                const topHTML = data.top_questions.length > 0
+                    ? data.top_questions.map(q =>
+                        `<div class="row"><span>${q.keyword.charAt(0).toUpperCase() + q.keyword.slice(1)}</span><span class="badge">${q.count}</span></div>`
+                      ).join('')
+                    : '<div class="row" style="color:#999;font-style:italic;">No data yet. Start asking questions!</div>';
+
+                analyticsBody.innerHTML = `
+                    <div class="analytics-card"><div class="label">Total Queries</div><div class="value">${data.total_queries}</div></div>
+                    <div class="analytics-card green"><div class="label">⚡ Rule Hits</div><div class="value">${data.rule_hits}</div></div>
+                    <div class="analytics-card orange"><div class="label">🧠 AI Fallbacks</div><div class="value">${data.ai_hits}</div></div>
+                    <div class="analytics-card pink"><div class="label">👥 Sessions</div><div class="value">${data.sessions}</div></div>
+                    <div class="analytics-card green"><div class="label">👍 Good</div><div class="value">${data.good_feedback}</div></div>
+                    <div class="analytics-card red"><div class="label">👎 Bad</div><div class="value">${data.bad_feedback}</div></div>
+                    <div class="analytics-top">
+                        <h4>🔥 Top 10 Questions</h4>
+                        ${topHTML}
+                    </div>
+                `;
+            } catch (err) {
+                analyticsBody.innerHTML = `<div class="analytics-loading">❌ Failed to load. Is the server running?</div>`;
+            }
+        }
+    </script>
+
+</body>
+</html>
