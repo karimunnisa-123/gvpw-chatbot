@@ -3,380 +3,357 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GVPW Smart Assistant</title>
+    <title>Gayatri Vidya Parishad College of Engineering for Women</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', Arial, sans-serif; }
 
         body {
-            background: #f8faff; min-height: 100vh;
-            display: flex; align-items: center; justify-content: center;
-            padding: 12px; overflow: hidden; transition: background 0.3s ease;
+            background-color: #f4f4f4;
+            color: #333; min-height: 100vh;
         }
 
-        /* LANDING */
-        .landing {
-            max-width: 780px; width: 100%; background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(8px); border-radius: 32px; padding: 28px 30px;
-            border: 1px solid rgba(255, 255, 255, 0.6); max-height: 96vh; overflow: hidden;
-            display: flex; flex-direction: column; justify-content: center;
+        /* ============================================================ */
+        /* GVPW WEBSITE THEME COLORS                                     */
+        /* ============================================================ */
+        :root {
+            --gvpw-blue: #0b4292;
+            --gvpw-teal: #0093b0;
+            --gvpw-gold: #ffd700;
+            --gvpw-light-teal: #e0f4f7;
         }
-        .brand-header { margin-bottom: 14px; text-align: center; }
-        .brand-header h1 {
-            font-size: 32px; font-weight: 700; color: #4A3FBF;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
+        
+        /* Top Blue Header */
+        .top-header {
+            background-color: var(--gvpw-blue); 
+            color: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 5px solid var(--gvpw-teal);
         }
-        .brand-header .sub { font-size: 16px; color: #4a4a6a; margin-top: 2px; }
-        .welcome-card {
-            background: linear-gradient(145deg, #f6f4ff, #ffffff);
-            padding: 18px 24px; border-radius: 24px; border: 1px solid #eeedf5;
-            margin-bottom: 14px; text-align: center;
-        }
-        .welcome-card p { font-size: 15px; line-height: 1.6; color: #1e1e32; }
-        .welcome-card p strong { color: #4A3FBF; }
-        .welcome-card .highlight-bubble {
-            display: inline-block; background: #6C63FF; color: white;
-            padding: 1px 14px; border-radius: 40px; font-weight: 600; font-size: 15px;
-        }
-        .welcome-card .secondary-text { color: #555577; font-size: 14px; margin-top: 4px; }
 
-        /* TOGGLE */
+        .logo-area { display: flex; align-items: center; gap: 15px; }
+
+        /* The Real Logo styling */
+        .logo-area img {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            background: white;
+            border-radius: 50%;
+            padding: 4px;
+            border: 2px solid var(--gvpw-gold);
+        }
+
+        .college-title { text-align: center; flex: 1; }
+        .college-title h1 { font-size: 28px; font-family: 'Times New Roman', serif; letter-spacing: 1px; margin-bottom: 5px; color: white; }
+        .college-title h3 { font-size: 16px; font-weight: normal; margin-bottom: 5px; color: white; }
+        .college-title p { font-size: 11px; margin-bottom: 2px; color: #e0e0e0; }
+        .college-title .address { font-size: 13px; font-weight: bold; margin-bottom: 5px; color: white; }
+
+        .eapcet-code {
+            text-align: center; font-size: 18px; font-weight: bold;
+            border: 1px solid white; padding: 10px; color: white;
+        }
+        .eapcet-code span { display: block; font-size: 28px; color: var(--gvpw-gold); margin-top: 5px; }
+
+        /* Teal Navigation Bar */
+        .main-nav {
+            background-color: var(--gvpw-teal);
+            padding: 0 40px; display: flex; gap: 25px;
+        }
+        .main-nav a {
+            color: white; text-decoration: none; font-size: 13px; font-weight: bold;
+            padding: 12px 0; text-transform: uppercase; display: inline-block; transition: 0.2s;
+        }
+        .main-nav a:hover { color: var(--gvpw-gold); }
+
+        /* Main Content Area */
+        .content-area { padding: 30px 40px; max-width: 1200px; margin: 0 auto; }
+
+        .announcement-box {
+            background: white; border-radius: 8px; padding: 20px 30px; margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 4px solid var(--gvpw-teal);
+        }
+        .announcement-box ul { list-style-type: "✳️ "; padding-left: 20px; line-height: 2.2; font-size: 15px; font-weight: 600; }
+        .announcement-box ul li:nth-child(1) { color: var(--gvpw-blue); }
+        .announcement-box ul li:nth-child(2) { color: var(--gvpw-blue); }
+        .announcement-box ul li:nth-child(3) { color: #b30000; }
+        .highlight-red { color: #b30000; }
+        .announcement-box p { font-size: 15px; font-weight: bold; margin-top: 10px; }
+        .announcement-box p span { color: #b30000; }
+        .announcement-box p a { color: var(--gvpw-blue); text-decoration: none; }
+
+        .placement-box {
+            background: white; border-radius: 8px; padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 4px solid #b30000;
+            line-height: 2; font-size: 15px; font-weight: 600; color: var(--gvpw-blue);
+        }
+
+        /* ============================================================ */
+        /* CHATBOT WIDGET (Now in Blue & Teal)                          */
+        /* ============================================================ */
+        
         .chat-toggle {
-            position: fixed; bottom: 28px; right: 28px; width: 60px; height: 60px;
-            background: linear-gradient(135deg, #6C63FF, #4A3FBF); color: white;
-            border: none; border-radius: 50%; font-size: 28px; cursor: pointer;
-            box-shadow: 0 8px 28px rgba(108, 99, 255, 0.4);
+            position: fixed; bottom: 28px; right: 28px; width: 64px; height: 64px;
+            background: var(--gvpw-blue); color: white;
+            border: 2px solid var(--gvpw-gold); border-radius: 50%; font-size: 30px; cursor: pointer;
+            box-shadow: 0 8px 28px rgba(11, 66, 146, 0.4);
             transition: all 0.3s ease; z-index: 1000;
             display: flex; align-items: center; justify-content: center;
         }
-        .chat-toggle:hover { transform: scale(1.06); }
+        .chat-toggle:hover { transform: scale(1.08); background: var(--gvpw-teal); }
 
-        /* WIDGET */
         .chat-widget {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px);
-            display: none; flex-direction: column; overflow: hidden; z-index: 1001;
-            animation: fadeIn 0.25s ease;
-        }
-        .chat-widget.active { display: flex; }
-        .chat-widget.minimized {
-            top: auto; left: auto; bottom: 100px; right: 28px;
+            position: fixed; bottom: 105px; right: 28px;
             width: 400px; height: 720px;
             max-width: calc(100vw - 40px); max-height: calc(100vh - 140px);
-            border-radius: 32px;
-            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(255,255,255,0.4);
-            animation: slideUp 0.3s ease;
+            background: #fff; border-radius: 16px; display: none; flex-direction: column; overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0,0,0,0.1);
+            z-index: 1001; animation: slideUp 0.3s ease;
         }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .chat-widget.active { display: flex; }
+
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(30px) scale(0.96); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* HEADER */
+        /* Chat Header (Blue with Logo) */
         .widget-header {
-            background: linear-gradient(135deg, #6C63FF, #4A3FBF); padding: 16px 24px;
+            background: var(--gvpw-blue); padding: 12px 16px;
             color: white; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+            border-bottom: 3px solid var(--gvpw-gold);
         }
-        .widget-header h3 { font-weight: 600; font-size: 17px; display: flex; align-items: center; gap: 10px; }
+        .header-left { display: flex; align-items: center; gap: 10px; }
+        
+        /* Logo inside Chat Header */
+        .header-left img {
+            width: 35px; height: 35px; background: white; border-radius: 50%;
+            object-fit: contain; padding: 2px; border: 1px solid var(--gvpw-gold);
+        }
+
+        .header-left h3 { font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 5px; }
+        
         .header-actions { display: flex; gap: 6px; align-items: center; }
         .header-actions button {
-            background: rgba(255, 255, 255, 0.15); border: none; color: white;
+            background: rgba(255, 255, 255, 0.2); border: none; color: white;
             width: 26px; height: 26px; border-radius: 50%; font-size: 12px; cursor: pointer;
             display: flex; align-items: center; justify-content: center; transition: 0.2s;
         }
-        .header-actions button:hover { background: rgba(255, 255, 255, 0.3); }
+        .header-actions button:hover { background: var(--gvpw-teal); }
 
-        /* MESSAGES */
+        /* Messages Area */
         .widget-messages {
             flex: 1 1 auto; min-height: 0; overflow-y: auto;
-            padding: 20px 24px 12px 24px; display: flex; flex-direction: column; gap: 10px;
-            background: rgba(250, 251, 255, 0.4); position: relative; z-index: 1;
-            width: 100%; max-width: 900px; margin: 0 auto;
+            padding: 20px 16px 12px 16px; display: flex; flex-direction: column; gap: 10px;
+            background: #f8fafc;
         }
         .widget-messages::-webkit-scrollbar { width: 6px; }
-        .widget-messages::-webkit-scrollbar-thumb { background: #c5bce6; border-radius: 20px; }
+        .widget-messages::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 20px; }
 
         .msg {
-            max-width: 85%; padding: 12px 18px; border-radius: 18px;
-            font-size: 14px; font-weight: 450; line-height: 1.6;
+            max-width: 88%; padding: 12px 16px; border-radius: 12px;
+            font-size: 14px; font-weight: 400; line-height: 1.5;
             animation: fadeSlide 0.25s ease; word-wrap: break-word;
         }
         .msg.user {
-            background: #6C63FF; color: white; align-self: flex-end;
-            border-bottom-right-radius: 4px; font-weight: 500;
+            background: var(--gvpw-teal); color: white; align-self: flex-end;
+            border-bottom-right-radius: 2px;
         }
         .msg.bot {
             background: white; color: #1a1a2e; align-self: flex-start;
-            border-bottom-left-radius: 4px; border: 1px solid #efedf7;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            border-bottom-left-radius: 2px; border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
-        .msg.bot.error { background: #fff0f0; border-color: #ff6b6b; color: #c0392b; }
-        .msg .tag { font-size: 10px; opacity: 0.5; margin-top: 6px; display: block; }
-        .msg.typing {
-            background: white !important; opacity: 0.7; font-style: italic;
-            border: 1px solid #e0ddf0;
-        }
-        .msg-feedback {
-            display: flex; gap: 6px; margin-top: 8px; font-size: 11px; flex-wrap: wrap;
-        }
+        .msg.bot.error { background: #fef2f2; border-color: #f87171; color: #b91c1c; }
+        .msg .tag { font-size: 10px; opacity: 0.6; margin-top: 6px; display: block; }
+        .msg.typing { background: white !important; opacity: 0.7; font-style: italic; border: 1px solid #e2e8f0; }
+        
+        .msg-feedback { display: flex; gap: 6px; margin-top: 8px; font-size: 11px; flex-wrap: wrap; }
         .msg-feedback button {
-            background: transparent; border: 1px solid #e0ddf0;
-            border-radius: 14px; padding: 3px 10px; cursor: pointer;
+            background: #f1f5f9; border: 1px solid #cbd5e1; color: var(--gvpw-blue);
+            border-radius: 12px; padding: 3px 10px; cursor: pointer;
             font-size: 11px; transition: 0.2s;
         }
-        .msg-feedback button:hover { background: #f0edff; }
+        .msg-feedback button:hover { background: var(--gvpw-blue); color: white; }
 
-        /* QUICK REPLIES */
+        /* Quick Replies */
         .quick-replies {
-            flex-shrink: 0; padding: 8px 16px; background: rgba(255, 255, 255, 0.95);
-            border-top: 1px solid rgba(0, 0, 0, 0.04);
+            flex-shrink: 0; padding: 8px 12px; background: white;
+            border-top: 1px solid #e2e8f0;
             display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
             position: relative; z-index: 2; max-height: 80px; overflow-y: auto;
-            width: 100%; max-width: 900px; margin: 0 auto;
         }
         .quick-chip {
-            background: #f0edff; color: #4A3FBF; border: none; padding: 5px 14px;
-            border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer;
+            background: var(--gvpw-light-teal); color: var(--gvpw-blue); border: 1px solid var(--gvpw-teal);
+            padding: 5px 12px; border-radius: 16px; font-size: 11px; font-weight: 600; cursor: pointer;
             transition: all 0.2s ease; white-space: nowrap;
         }
-        .quick-chip:hover { background: #6C63FF; color: white; transform: translateY(-1px); }
+        .quick-chip:hover { background: var(--gvpw-teal); color: white; }
 
-        /* INPUT */
+        /* Input Area */
         .widget-input {
-            flex-shrink: 0; padding: 8px 24px 14px 24px;
-            background: rgba(255, 255, 255, 0.95); display: flex; gap: 8px;
-            border-top: 1px solid rgba(0, 0, 0, 0.04); position: relative; z-index: 2;
-            width: 100%; max-width: 900px; margin: 0 auto;
+            flex-shrink: 0; padding: 10px 16px; background: white; display: flex; gap: 8px;
+            border-top: 1px solid #e2e8f0; position: relative; z-index: 2;
         }
         .widget-input input {
-            flex: 1; padding: 8px 16px; border: 1.5px solid #e6e4f0;
-            border-radius: 30px; font-size: 12px; outline: none;
-            background: #fafaff; height: 36px;
+            flex: 1; padding: 8px 16px; border: 1px solid #cbd5e1;
+            border-radius: 24px; font-size: 13px; outline: none;
+            background: #f8fafc; height: 38px;
         }
-        .widget-input input:focus {
-            border-color: #6C63FF;
-            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.08);
-        }
+        .widget-input input:focus { border-color: var(--gvpw-teal); box-shadow: 0 0 0 3px rgba(0, 147, 176, 0.1); }
         .widget-input > button {
-            background: #6C63FF; color: white; border: none; padding: 0 20px;
-            height: 36px; border-radius: 30px; font-weight: 600;
-            font-size: 12px; cursor: pointer; transition: 0.2s;
+            background: var(--gvpw-blue); color: white; border: none; padding: 0 16px;
+            height: 38px; border-radius: 24px; font-weight: 600;
+            font-size: 13px; cursor: pointer; transition: 0.2s;
         }
-        .widget-input > button:hover { background: #4A3FBF; }
+        .widget-input > button:hover { background: var(--gvpw-teal); }
 
-        /* SUGGESTIONS DROPDOWN */
         .suggestions-dropdown {
-            position: absolute; bottom: 100%; left: 24px; right: 24px;
-            background: white; border-radius: 14px 14px 0 0;
+            position: absolute; bottom: 100%; left: 16px; right: 16px;
+            background: white; border-radius: 12px 12px 0 0;
             box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
             max-height: 200px; overflow-y: auto; display: none;
-            z-index: 10; border: 1px solid #eeedf5; border-bottom: none;
+            z-index: 10; border: 1px solid #e2e8f0; border-bottom: none;
         }
         .suggestions-dropdown.show { display: block; }
         .suggestion-item {
             padding: 10px 16px; cursor: pointer; font-size: 13px;
-            color: #4A3FBF; border-bottom: 1px solid #f5f3ff; transition: 0.15s;
+            color: var(--gvpw-blue); border-bottom: 1px solid #f1f5f9; transition: 0.15s;
         }
-        .suggestion-item:hover { background: #f0edff; }
-        .suggestion-item:last-child { border-bottom: none; }
+        .suggestion-item:hover { background: var(--gvpw-light-teal); }
 
-        /* ---------- ANALYTICS PANEL ---------- */
+        /* ANALYTICS PANEL */
         .analytics-panel {
-            display: none;
-            background: rgba(255, 255, 255, 0.98);
-            border-bottom: 2px solid #e6e4f0;
-            padding: 16px 24px;
-            flex-shrink: 0;
-            animation: slideDown 0.3s ease;
-            max-height: 400px;
-            overflow-y: auto;
+            display: none; background: #f8fafc; border-bottom: 1px solid #e2e8f0;
+            padding: 16px; flex-shrink: 0; max-height: 400px; overflow-y: auto;
         }
         .analytics-panel.show { display: block; }
-
         .analytics-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 700;
-            color: #4A3FBF;
-            font-size: 15px;
-            margin-bottom: 12px;
+            display: flex; justify-content: space-between; align-items: center;
+            font-weight: 700; color: var(--gvpw-blue); font-size: 14px; margin-bottom: 12px;
         }
-
-        .analytics-body {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
-        }
-
+        .analytics-body { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 8px; }
         .analytics-card {
-            background: linear-gradient(135deg, #f6f4ff, #ffffff);
-            padding: 12px 14px;
-            border-radius: 12px;
-            border-left: 4px solid #6C63FF;
-            text-align: center;
+            background: white; padding: 10px; border-radius: 8px;
+            border-left: 3px solid var(--gvpw-teal); text-align: center;
         }
-        .analytics-card .label {
-            font-size: 10px;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-            font-weight: 600;
-        }
-        .analytics-card .value {
-            font-size: 22px;
-            font-weight: 700;
-            color: #4A3FBF;
-        }
-        .analytics-card.green { border-left-color: #27ae60; }
-        .analytics-card.green .value { color: #1e8449; }
-        .analytics-card.orange { border-left-color: #f39c12; }
-        .analytics-card.orange .value { color: #b9770e; }
-        .analytics-card.pink { border-left-color: #e83a6b; }
-        .analytics-card.pink .value { color: #b3194f; }
-        .analytics-card.red { border-left-color: #c0392b; }
-        .analytics-card.red .value { color: #922b21; }
+        .analytics-card .label { font-size: 9px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+        .analytics-card .value { font-size: 18px; font-weight: 700; color: var(--gvpw-blue); }
+        .analytics-top { grid-column: 1 / -1; background: white; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 6px; }
+        .analytics-top h4 { font-size: 12px; color: var(--gvpw-blue); margin-bottom: 8px; font-weight: 700; }
+        .analytics-top .row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; font-size: 12px; color: #334155; }
+        .analytics-top .badge { background: var(--gvpw-light-teal); color: var(--gvpw-blue); padding: 2px 8px; border-radius: 12px; font-weight: 700; font-size: 11px; }
 
-        .analytics-top {
-            grid-column: 1 / -1;
-            background: white;
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 1px solid #f0edff;
-            margin-top: 6px;
-        }
-        .analytics-top h4 {
-            font-size: 13px;
-            color: #4A3FBF;
-            margin-bottom: 8px;
-            font-weight: 700;
-        }
-        .analytics-top .row {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 1px dashed #f0f0f5;
-            font-size: 12px;
-            color: #1a1a2e;
-        }
-        .analytics-top .row:last-child { border-bottom: none; }
-        .analytics-top .badge {
-            background: #f0edff;
-            color: #4A3FBF;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 11px;
-        }
+        /* DARK MODE (Optional toggle) */
+        body.dark-mode .chat-widget { background: #1e293b; }
+        body.dark-mode .widget-messages { background: #0f172a; }
+        body.dark-mode .msg.bot { background: #1e293b; color: #f8fafc; border-color: #334155; }
+        body.dark-mode .widget-input { background: #1e293b; border-color: #334155; }
+        body.dark-mode .widget-input input { background: #0f172a; color: white; border-color: #334155; }
+        body.dark-mode .quick-replies { background: #1e293b; border-color: #334155; }
+        body.dark-mode .quick-chip { background: #0f172a; border-color: var(--gvpw-teal); color: var(--gvpw-teal); }
+        body.dark-mode .analytics-panel { background: #0f172a; border-color: #334155; }
+        body.dark-mode .analytics-card, body.dark-mode .analytics-top { background: #1e293b; border-color: #334155; }
 
-        .analytics-loading {
-            grid-column: 1 / -1;
-            text-align: center;
-            color: #999;
-            padding: 20px;
-            font-style: italic;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; max-height: 0; }
-            to { opacity: 1; max-height: 400px; }
-        }
-
-        /* DARK MODE */
-        body.dark-mode { background: #0f1220; }
-        body.dark-mode .landing { background: rgba(20, 22, 40, 0.85); border-color: rgba(255, 255, 255, 0.08); }
-        body.dark-mode .brand-header h1 { color: #b3a7ff; }
-        body.dark-mode .brand-header .sub { color: #9999b8; }
-        body.dark-mode .welcome-card {
-            background: linear-gradient(145deg, #1a1c2f, #252842);
-            border-color: #2a2d45;
-        }
-        body.dark-mode .welcome-card p { color: #e0e0f5; }
-        body.dark-mode .welcome-card p strong { color: #b3a7ff; }
-        body.dark-mode .welcome-card .secondary-text { color: #a0a0c0; }
-        body.dark-mode .chat-widget { background: #0f1220; }
-        body.dark-mode .chat-widget.minimized { background: #16182a; box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6); }
-        body.dark-mode .widget-messages { background: #0f1220; }
-        body.dark-mode .msg.bot { background: #1a1c2f; color: #e0e0f5; border-color: #2a2d45; }
-        body.dark-mode .msg.typing { background: #1a1c2f !important; color: #c0c0e0; border-color: #2a2d45; }
-        body.dark-mode .msg .tag { color: #8888a8; }
-        body.dark-mode .msg-feedback button { border-color: #2a2d45; color: #b3a7ff; }
-        body.dark-mode .msg-feedback button:hover { background: #2a2d45; }
-        body.dark-mode .quick-replies { background: #16182a; border-top-color: #2a2d45; }
-        body.dark-mode .quick-chip { background: #2a2d45; color: #b3a7ff; }
-        body.dark-mode .quick-chip:hover { background: #6C63FF; color: white; }
-        body.dark-mode .widget-input { background: #16182a; border-top-color: #2a2d45; }
-        body.dark-mode .widget-input input { background: #1a1c2f; color: #e0e0f5; border-color: #2a2d45; }
-        body.dark-mode .widget-input input::placeholder { color: #7777a0; }
-        body.dark-mode .widget-header { background: linear-gradient(135deg, #4A3FBF, #2d2660); }
-        body.dark-mode .suggestions-dropdown { background: #1a1c2f; border-color: #2a2d45; }
-        body.dark-mode .suggestion-item { color: #b3a7ff; border-bottom-color: #2a2d45; }
-        body.dark-mode .suggestion-item:hover { background: #2a2d45; }
-        body.dark-mode .analytics-panel { background: #16182a; border-bottom-color: #2a2d45; }
-        body.dark-mode .analytics-header { color: #b3a7ff; }
-        body.dark-mode .analytics-card {
-            background: linear-gradient(135deg, #1a1c2f, #252842);
-            border-color: #2a2d45;
-        }
-        body.dark-mode .analytics-card .label { color: #9999b8; }
-        body.dark-mode .analytics-card .value { color: #b3a7ff; }
-        body.dark-mode .analytics-top { background: #1a1c2f; border-color: #2a2d45; }
-        body.dark-mode .analytics-top h4 { color: #b3a7ff; }
-        body.dark-mode .analytics-top .row { color: #e0e0f5; border-bottom-color: #2a2d45; }
-        body.dark-mode .analytics-top .badge { background: #2a2d45; color: #b3a7ff; }
-
-        /* RESPONSIVE */
-        @media (max-width: 600px) {
-            .chat-widget.minimized {
-                bottom: 70px; right: 10px;
-                width: calc(100vw - 20px); height: calc(100vh - 120px);
-                border-radius: 28px;
-            }
-            .chat-toggle {
-                width: 54px; height: 54px; font-size: 24px;
-                bottom: 20px; right: 20px;
-            }
-            .msg { font-size: 13px; padding: 10px 14px; }
-            .quick-chip { font-size: 11px; padding: 4px 10px; }
-        }
-
-        @keyframes fadeSlide {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+        @media (max-width: 768px) {
+            .top-header { flex-direction: column; text-align: center; gap: 15px; padding: 15px; }
+            .college-title h1 { font-size: 20px; }
+            .main-nav { overflow-x: auto; white-space: nowrap; padding: 0 15px; }
+            .content-area { padding: 15px; }
+            .chat-widget { bottom: 90px; right: 10px; width: calc(100vw - 20px); height: calc(100vh - 120px); }
+            .chat-toggle { width: 54px; height: 54px; font-size: 24px; bottom: 20px; right: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="landing">
-        <div class="brand-header">
-            <h1><span>🎓</span> GVPW Smart Assistant</h1>
-            <div class="sub">Your 24/7 AI companion for campus life ✨</div>
+    <!-- ========================================== -->
+    <!-- TOP BLUE HEADER                            -->
+    <!-- ========================================== -->
+    <header class="top-header">
+        <div class="logo-area">
+            <!-- Real GVPW Logo Link with fallback -->
+            <img src="logo.png" alt="GVPW Logo">
         </div>
-        <div class="welcome-card">
-            <p>👋 <strong>Hey there, GVPWian!</strong> Welcome to your new <strong>AI-powered campus companion</strong>.</p>
-            <p style="margin-top: 6px;">Click the floating <span class="highlight-bubble">💬</span> icon to start chatting.</p>
-            <p class="secondary-text">Ask me <strong>anything about GVPW</strong>!</p>
+        <div class="college-title">
+            <h1>GAYATRI VIDYA PARISHAD</h1>
+            <h1>COLLEGE OF ENGINEERING FOR WOMEN</h1>
+            <h3>(Autonomous)</h3>
+            <p class="address">Kommadi, Madhurawada, Visakhapatnam - 530 048</p>
+            <p>(Approved by AICTE, New Delhi; Permanently Affiliated to Andhra University, Visakhapatnam)</p>
+            <p>(Accredited by National Board of Accreditation (NBA) for B.Tech CSE, ECE and IT - Valid from 2019-2022 and 2022-2025)</p>
+            <p>(Accredited by National Board of Accreditation (NBA) for B.Tech EEE - Valid from 2023-2026)</p>
+            <p>(Accredited by National Assessment and Accreditation Council (NAAC) with A grade Valid from 2022-2027)</p>
+            <p style="margin-top: 5px;">Phone : +91-0891-2739144; 2739124; 2719125; 2719127; Email ID: gvpcw@gmail.com; info@gvpcew.ac.in Website : www.gvpcew.ac.in</p>
+        </div>
+        <div class="eapcet-code">
+            EAPCET Code
+            <span>GVPW</span>
+        </div>
+    </header>
+
+    <!-- ========================================== -->
+    <!-- TEAL NAVIGATION BAR                        -->
+    <!-- ========================================== -->
+    <nav class="main-nav">
+        <a href="#">Administration ▾</a>
+        <a href="#">Training & Placement</a>
+        <a href="#">Departments ▾</a>
+        <a href="#">IQAC</a>
+        <a href="#">Library ▾</a>
+        <a href="#">Facilities ▾</a>
+        <a href="#">Research</a>
+        <a href="#">Exam Section ▾</a>
+        <a href="#">Gallery</a>
+        <a href="#">Contact</a>
+    </nav>
+
+    <!-- ========================================== -->
+    <!-- MAIN CONTENT (Announcements)               -->
+    <!-- ========================================== -->
+    <div class="content-area">
+        <div class="announcement-box">
+            <ul>
+                <li>Admission Notification 2026-27</li>
+                <li>Letter of Permission Granted for GVPIHLR- Deemed to be University under Distinct Category</li>
+                <li>Fee Structure and Merit Scholarships for the proposed GVPIHLR - Deemed to be University <span style="color:black;">||</span> <span class="highlight-red">Admissions Enquiries(2026-27)</span></li>
+            </ul>
+            <p><span>ONLINE FEE PAYMENT</span> || <a href="#">A BRIEF VIEW OF THE COLLEGE PHYSICAL FACILITIES</a></p>
+        </div>
+
+        <div class="placement-box">
+            <ul style="list-style-type: none; padding-left: 0;">
+                <li>✳️ Admissions Enquiry Contacts: <span class="highlight-red">9849550004, 9397116622</span></li>
+                <li>✳️ CONGRATULATIONS TO 2021 ADMITTED BATCH: TCS PRIORITY HIRING RESULTS: DIGITAL-4; NINJA-50 ✳️ F</li>
+                <li>✳️ 2022-2023 Placements (Present Final Year) 193* Infosys -07; TCS - 61; Capgemini- 125 ✳️ 2021-2022 Placeme</li>
+            </ul>
         </div>
     </div>
 
+    <!-- ========================================== -->
+    <!-- FLOATING CHATBOT WIDGET                    -->
+    <!-- ========================================== -->
     <button class="chat-toggle" id="toggleChat" aria-label="Open Chat">💬</button>
 
     <div class="chat-widget" id="chatWidget">
         <div class="widget-header">
-            <h3>📱 GVPW Assistant</h3>
+            <div class="header-left">
+                <!-- LOGO ADDED INSIDE CHATBOT HEADER -->
+                <img src="logo.png" alt="GVPW Logo">
+                <h3>GVPW Assistant</h3>
+            </div>
             <div class="header-actions">
                 <button id="analyticsBtn" title="View Analytics">📊</button>
                 <button id="exportChatBtn" title="Export Chat">📥</button>
                 <button id="clearHistoryBtn" title="Clear Chat">🗑️</button>
                 <button id="themeToggle" title="Toggle Dark Mode">🌙</button>
-                <button id="minimizeBtn" title="Minimize / Expand">—</button>
                 <button id="closeChat" title="Close">✕</button>
             </div>
         </div>
 
-        <!-- ANALYTICS PANEL -->
         <div class="analytics-panel" id="analyticsPanel">
             <div class="analytics-header">
                 <span>📊 Live Analytics</span>
@@ -389,7 +366,7 @@
 
         <div class="widget-messages" id="chatBox">
             <div class="msg bot">
-                🌱 Click a topic below or type your question!
+                🌱 Hi! I am your GVPW Assistant. Click a topic below or type your question!
                 <span class="tag">✨ Ready</span>
             </div>
         </div>
@@ -404,39 +381,46 @@
             <button class="quick-chip" onclick="sendQuickReply('hostel')">🏠 Hostel</button>
             <button class="quick-chip" onclick="sendQuickReply('clubs')">🎯 Clubs</button>
             <button class="quick-chip" onclick="sendQuickReply('placements')">💼 Placements</button>
-            <button class="quick-chip" onclick="sendQuickReply('internships')">🎓 Internships</button>
-            <button class="quick-chip" onclick="sendQuickReply('canteen')">🍴 Canteen</button>
+            <button class="quick-chip" onclick="sendQuickReply('cse faculty')">👩‍🏫 Faculty</button>
             <button class="quick-chip" onclick="sendQuickReply('bus routes')">🚌 Bus Routes</button>
-            <button class="quick-chip" onclick="sendQuickReply('events')">📅 Events</button>
-            <button class="quick-chip" onclick="sendQuickReply('cse faculty')">👩‍🏫 CSE Faculty</button>
-            <button class="quick-chip" onclick="sendQuickReply('csm faculty')">🤖 CSM Faculty</button>
-            <button class="quick-chip" onclick="sendQuickReply('dress code')">👕 Dress Code</button>
         </div>
 
         <div class="widget-input" style="position: relative;">
             <div id="suggestions" class="suggestions-dropdown"></div>
-            <input type="text" id="userInput" placeholder="Type your question..." autocomplete="off" />
+            <input type="text" id="userInput" placeholder="Ask me anything about GVPW..." autocomplete="off" />
             <button onclick="sendMessage()">Send</button>
         </div>
     </div>
 
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT                                 -->
+    <!-- ========================================== -->
     <script>
         const toggleBtn = document.getElementById('toggleChat');
         const closeBtn = document.getElementById('closeChat');
-        const minimizeBtn = document.getElementById('minimizeBtn');
         const widget = document.getElementById('chatWidget');
         const themeToggle = document.getElementById('themeToggle');
         const userInputEl = document.getElementById('userInput');
         const suggestionsEl = document.getElementById('suggestions');
 
-        // ---------- SESSION ID ----------
         let sessionId = localStorage.getItem('gvpw-session');
         if (!sessionId) {
             sessionId = 'sess-' + Math.random().toString(36).substring(2, 12) + '-' + Date.now();
             localStorage.setItem('gvpw-session', sessionId);
         }
 
-        // ---------- DARK MODE ----------
+        function openChat() {
+            widget.classList.add('active');
+            toggleBtn.style.display = 'none';
+            userInputEl.focus();
+        }
+        function closeChat() {
+            widget.classList.remove('active');
+            toggleBtn.style.display = 'flex';
+        }
+        toggleBtn.addEventListener('click', openChat);
+        closeBtn.addEventListener('click', closeChat);
+
         const savedTheme = localStorage.getItem('gvpw-theme');
         if (savedTheme === 'dark') {
             document.body.classList.add('dark-mode');
@@ -448,27 +432,6 @@
             localStorage.setItem('gvpw-theme', isDark ? 'dark' : 'light');
         });
 
-        // ---------- OPEN / CLOSE / MINIMIZE ----------
-        function openChat() {
-            widget.classList.add('active');
-            widget.classList.remove('minimized');
-            toggleBtn.style.display = 'none';
-            minimizeBtn.innerText = '—';
-        }
-        function closeChat() {
-            widget.classList.remove('active');
-            widget.classList.remove('minimized');
-            toggleBtn.style.display = 'flex';
-        }
-        function toggleMinimize() {
-            const nowMin = widget.classList.toggle('minimized');
-            minimizeBtn.innerText = nowMin ? '⛶' : '—';
-        }
-        toggleBtn.addEventListener('click', openChat);
-        closeBtn.addEventListener('click', closeChat);
-        minimizeBtn.addEventListener('click', toggleMinimize);
-
-        // ---------- SEND MESSAGE ----------
         async function sendMessage(message = null) {
             let msg = message;
             if (!msg) {
@@ -505,8 +468,8 @@
                             <div class="msg-content-${msgId}">${data.answer}</div>
                             <span class="tag">${data.icon || '💬'} ${data.source || 'Bot'}</span>
                             <div class="msg-feedback">
-                                <button onclick="sendFeedback('${msgId}', 'good', '${msg.replace(/'/g, "\\'")}')">👍 Helpful</button>
-                                <button onclick="sendFeedback('${msgId}', 'bad', '${msg.replace(/'/g, "\\'")}')">👎 Not helpful</button>
+                                <button onclick="sendFeedback('${msgId}', 'good', '${msg.replace(/'/g, "\\'")}')">👍</button>
+                                <button onclick="sendFeedback('${msgId}', 'bad', '${msg.replace(/'/g, "\\'")}')">👎</button>
                                 <button onclick="copyAnswer('${msgId}', this)">📋 Copy</button>
                             </div>
                         </div>
@@ -518,23 +481,16 @@
                 saveChatHistory();
             } catch (error) {
                 if (typingDiv && typingDiv.parentNode) typingDiv.remove();
-                chatBox.innerHTML += `
-                    <div class="msg bot error">
-                        ❌ Cannot connect to Flask!<br>
-                        <strong>Open terminal and run: python app.py</strong>
-                    </div>
-                `;
+                chatBox.innerHTML += `<div class="msg bot error">❌ Cannot connect to Flask!</div>`;
                 chatBox.scrollTop = chatBox.scrollHeight;
             }
         }
 
         function sendQuickReply(topic) { sendMessage(topic); }
 
-        // ---------- COPY ANSWER ----------
         function copyAnswer(msgId, btnElement) {
             const content = document.querySelector(`.msg-content-${msgId}`);
             if (!content) return;
-
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = content.innerHTML;
             const plainText = (tempDiv.innerText || tempDiv.textContent || '').trim();
@@ -542,18 +498,10 @@
             navigator.clipboard.writeText(plainText).then(() => {
                 const original = btnElement.innerText;
                 btnElement.innerText = '✅ Copied!';
-                btnElement.style.color = '#27ae60';
-                setTimeout(() => {
-                    btnElement.innerText = original;
-                    btnElement.style.color = '';
-                }, 1500);
-            }).catch(err => {
-                console.error('Copy failed:', err);
-                alert('Could not copy. Please try manually.');
+                setTimeout(() => { btnElement.innerText = original; }, 1500);
             });
         }
 
-        // ---------- FEEDBACK ----------
         async function sendFeedback(msgId, rating, message) {
             try {
                 await fetch('/feedback', {
@@ -564,14 +512,11 @@
                 const el = document.getElementById(msgId);
                 if (el) {
                     const fbDiv = el.querySelector('.msg-feedback');
-                    if (fbDiv) {
-                        fbDiv.innerHTML = `<span style="font-size:11px; color:#6C63FF; font-weight:600;">✅ Thanks for your feedback!</span>`;
-                    }
+                    if (fbDiv) fbDiv.innerHTML = `<span style="color:var(--gvpw-blue); font-weight:600;">✅ Thanks!</span>`;
                 }
-            } catch (e) { console.error(e); }
+            } catch (e) { }
         }
 
-        // ---------- CHAT HISTORY ----------
         function saveChatHistory() {
             const chatBox = document.getElementById('chatBox');
             const messages = [];
@@ -579,9 +524,8 @@
                 if (msg.classList.contains('typing')) return;
                 const isUser = msg.classList.contains('user');
                 let text = '';
-                if (isUser) {
-                    text = msg.innerText;
-                } else {
+                if (isUser) text = msg.innerText;
+                else {
                     const c = msg.querySelector('div[class^="msg-content-"]');
                     text = c ? c.innerHTML : msg.innerHTML;
                 }
@@ -599,21 +543,11 @@
                 const chatBox = document.getElementById('chatBox');
                 chatBox.innerHTML = '';
                 messages.forEach(msg => {
-                    if (msg.role === 'user') {
-                        chatBox.innerHTML += `<div class="msg user">${msg.content}</div>`;
-                    } else {
-                        chatBox.innerHTML += `
-                            <div class="msg bot">
-                                ${msg.content}
-                                <span class="tag">💬 Restored</span>
-                            </div>
-                        `;
-                    }
+                    if (msg.role === 'user') chatBox.innerHTML += `<div class="msg user">${msg.content}</div>`;
+                    else chatBox.innerHTML += `<div class="msg bot">${msg.content}<span class="tag">💬 Restored</span></div>`;
                 });
                 chatBox.scrollTop = chatBox.scrollHeight;
-            } catch (e) {
-                console.error('Failed to load history:', e);
-            }
+            } catch (e) { }
         }
 
         function clearChatHistory() {
@@ -623,20 +557,15 @@
             }
         }
 
-        // ---------- EXPORT CHAT ----------
         function exportChat() {
             const chatBox = document.getElementById('chatBox');
-            let text = `GVPW Smart Assistant - Chat Export\n`;
-            text += `Date: ${new Date().toLocaleString()}\n`;
-            text += `==========================================\n\n`;
-
+            let text = `GVPW Smart Assistant - Chat Export\nDate: ${new Date().toLocaleString()}\n\n`;
             chatBox.querySelectorAll('.msg').forEach(msg => {
                 if (msg.classList.contains('typing')) return;
                 const isUser = msg.classList.contains('user');
                 let content = '';
-                if (isUser) {
-                    content = msg.innerText;
-                } else {
+                if (isUser) content = msg.innerText;
+                else {
                     const c = msg.querySelector('div[class^="msg-content-"]');
                     const tempDiv = document.createElement('div');
                     tempDiv.innerHTML = c ? c.innerHTML : msg.innerHTML;
@@ -649,17 +578,14 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `GVPW-Chat-${new Date().toISOString().slice(0,10)}.txt`;
-            document.body.appendChild(a);
+            a.download = `GVPW-Chat.txt`;
             a.click();
-            document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
 
         document.getElementById('exportChatBtn').addEventListener('click', exportChat);
         document.getElementById('clearHistoryBtn').addEventListener('click', clearChatHistory);
 
-        // ---------- SEARCH SUGGESTIONS ----------
         const suggestionTopics = [
             'College Map', 'Library Timings', 'Branches', 'Fees Structure',
             'Admission Process', 'Exam Schedule', 'Hostel', 'Clubs', 'Placements',
@@ -670,18 +596,10 @@
 
         userInputEl.addEventListener('input', function() {
             const query = this.value.toLowerCase().trim();
-            if (query.length < 2) {
-                suggestionsEl.classList.remove('show');
-                return;
-            }
+            if (query.length < 2) { suggestionsEl.classList.remove('show'); return; }
             const matches = suggestionTopics.filter(t => t.toLowerCase().includes(query)).slice(0, 5);
-            if (matches.length === 0) {
-                suggestionsEl.classList.remove('show');
-                return;
-            }
-            suggestionsEl.innerHTML = matches.map(m =>
-                `<div class="suggestion-item" onclick="pickSuggestion('${m}')">💡 ${m}</div>`
-            ).join('');
+            if (matches.length === 0) { suggestionsEl.classList.remove('show'); return; }
+            suggestionsEl.innerHTML = matches.map(m => `<div class="suggestion-item" onclick="pickSuggestion('${m}')">💡 ${m}</div>`).join('');
             suggestionsEl.classList.add('show');
         });
 
@@ -692,62 +610,47 @@
         }
 
         document.addEventListener('click', function(e) {
-            if (!userInputEl.contains(e.target) && !suggestionsEl.contains(e.target)) {
-                suggestionsEl.classList.remove('show');
-            }
+            if (!userInputEl.contains(e.target) && !suggestionsEl.contains(e.target)) suggestionsEl.classList.remove('show');
         });
 
-        // ---------- ENTER KEY ----------
         userInputEl.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') sendMessage();
         });
 
-        // Load history on page open
         loadChatHistory();
 
-        // ---------- ANALYTICS PANEL ----------
         const analyticsBtn = document.getElementById('analyticsBtn');
         const analyticsPanel = document.getElementById('analyticsPanel');
         const analyticsBody = document.getElementById('analyticsBody');
 
         analyticsBtn.addEventListener('click', function() {
             const isOpen = analyticsPanel.classList.toggle('show');
-            if (isOpen) {
-                loadAnalytics();
-            }
+            if (isOpen) loadAnalytics();
         });
 
-        function closeAnalytics() {
-            analyticsPanel.classList.remove('show');
-        }
+        function closeAnalytics() { analyticsPanel.classList.remove('show'); }
 
         async function loadAnalytics() {
-            analyticsBody.innerHTML = '<div class="analytics-loading">⏳ Loading analytics...</div>';
+            analyticsBody.innerHTML = '<div class="analytics-loading">⏳ Loading...</div>';
             try {
                 const res = await fetch('/analytics-data');
                 const data = await res.json();
 
                 const topHTML = data.top_questions.length > 0
-                    ? data.top_questions.map(q =>
-                        `<div class="row"><span>${q.keyword.charAt(0).toUpperCase() + q.keyword.slice(1)}</span><span class="badge">${q.count}</span></div>`
-                      ).join('')
-                    : '<div class="row" style="color:#999;font-style:italic;">No data yet. Start asking questions!</div>';
+                    ? data.top_questions.map(q => `<div class="row"><span>${q.keyword.charAt(0).toUpperCase() + q.keyword.slice(1)}</span><span class="badge">${q.count}</span></div>`).join('')
+                    : '<div class="row" style="color:#999;">No data yet.</div>';
 
                 analyticsBody.innerHTML = `
-                    <div class="analytics-card"><div class="label">Total Queries</div><div class="value">${data.total_queries}</div></div>
-                    <div class="analytics-card green"><div class="label">⚡ Rule Hits</div><div class="value">${data.rule_hits}</div></div>
-                    <div class="analytics-card orange"><div class="label">🧠 AI Fallbacks</div><div class="value">${data.ai_hits}</div></div>
-                    <div class="analytics-card pink"><div class="label">👥 Sessions</div><div class="value">${data.sessions}</div></div>
-                    <div class="analytics-card green"><div class="label">👍 Good</div><div class="value">${data.good_feedback}</div></div>
-                    <div class="analytics-card red"><div class="label">👎 Bad</div><div class="value">${data.bad_feedback}</div></div>
+                    <div class="analytics-card"><div class="label">Total</div><div class="value">${data.total_queries}</div></div>
+                    <div class="analytics-card" style="border-color:#10b981;"><div class="label">Rules</div><div class="value" style="color:#10b981;">${data.rule_hits}</div></div>
+                    <div class="analytics-card" style="border-color:#f59e0b;"><div class="label">AI</div><div class="value" style="color:#f59e0b;">${data.ai_hits}</div></div>
+                    <div class="analytics-card" style="border-color:#ef4444;"><div class="label">Users</div><div class="value" style="color:#ef4444;">${data.sessions}</div></div>
                     <div class="analytics-top">
-                        <h4>🔥 Top 10 Questions</h4>
+                        <h4>🔥 Top Questions</h4>
                         ${topHTML}
                     </div>
                 `;
-            } catch (err) {
-                analyticsBody.innerHTML = `<div class="analytics-loading">❌ Failed to load. Is the server running?</div>`;
-            }
+            } catch (err) { analyticsBody.innerHTML = `<div class="analytics-loading">❌ Failed to load.</div>`; }
         }
     </script>
 
